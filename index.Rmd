@@ -1,0 +1,17 @@
+---
+title: "About Me"
+---
+
+My name is Kannika Pho. I started off in Sac State as a Mathematic major and added Computer Science as my minor soon after. I am not very active in CS field. Big data and data management are what I'm interested in. Yet, I'm still undecided for the most part. So I'm open to anything. I worked as a PAL facilitator for Math 32 on-campus and as a summer leader for a community service program. Currently, I work as a Math tutor/academic mentor off-campus.
+
+Contact: kannikapho@csus.edu
+
+
+![Source: Visions Service Adventure Bio](https://42asrn25bszn156r5w1wuzfq-wpengine.netdna-ssl.com/wp-content/uploads/2018/03/About-Us-Staff_Kannika-Pho-2.jpg)
+
+#### Programming Languages
+
+- Sufficient: Java, C++, C, Assembly
+- Future Goals: SQL, R, Python, Ruby
+
+
