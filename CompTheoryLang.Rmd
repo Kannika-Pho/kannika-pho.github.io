@@ -167,8 +167,6 @@ For Recursive Descent Parser, I use Javascript. I thought doing it in Javascript
 [Scanning and Parsing](http://www.cs.colostate.edu/~mstrout/CS553Fall06/slides/lecture02a-scanparse.pdf) <br>
 [Syntax and Semantics](https://linguistics.utah.edu/syntaxsemantics.php) <br>
 [An Introduction to Formal Languages and Automata](http://almuhammadi.com/sultan/books/Linz.5ed.pdf) <br>
-[HTML and Javascript](https://www.w3schools.com/) <br><br>
+[HTML and Javascript](https://www.w3schools.com/) 
 
-
-
-
+<br><br><br><br>

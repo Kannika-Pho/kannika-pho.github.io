@@ -2,18 +2,22 @@ name: "Personal-Page"
 navbar:
   title: "Personal Page"
   left:
-    - text: "Computer Theory and Languages"
-      href: CompTheoryLang.html
-    - text: "Analyzing Simulations"
-      href: AnalyzingSimulations.html
-    - text: "Random Variables"
-      href: RandomVariables.html
     - text: "Quintic Polynomials"
       href: QuinticPoly.html
-    - text: "Covid Cases"
-      href: CovidCases.html
+    - text: "Computer Theory and Languages"
+      href: CompTheoryLang.html
+    - text: "Random Variables"
+      href: RandomVariables.html
     - text: "Intro to Data Frame"
       href: IntroDataFrame.html
+    - text: "Analyzing Simulations"
+      href: AnalyzingSimulations.html
+    - text: "Predicting Function"
+      href: PredictingFunction.html
+    - text: "Interest Rate"
+      href: InterestRate.html
+    - text: "Covid Cases"
+      href: CovidCases.html
     - text: "Groceries Data"
       href: GroceriesProject.html
 output:
