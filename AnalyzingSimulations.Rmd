@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Analyzing Simulations"
 Author: "Kannika Pho"
@@ -202,3 +203,209 @@ In theory, the martigale works assuming players have unlimited amount of money t
 
 <br><br><br><br>
 
+=======
+---
+title: "Analyzing Simulations"
+Author: "Kannika Pho"
+---
+
+#### Outcomes
+
+- Visualize and compare complex data
+- Use higher order functions
+- Explain unfamiliar code written by another person
+
+
+#### Background
+
+As promised, in this assignment we will use the functions representing random variables that we developed in the previous assignment to explore different strategies for playing the game of roulette.
+
+#### Instructions
+
+- Don't be constrained by the questions.
+    If you want to ask something deeper, then go for it!
+- Answer the following questions, and show all your R code.
+- Upload your submission to Canvas in nicely formatted HTML generated from Rstudio.
+
+Below are some functions and code you can use to complete the assignment.
+
+```{r, echo = FALSE}
+even = function(x)
+{
+    win = (x %% 2 == 0) & (x != 0)
+    ifelse(win, 1, -1)
+}
+
+
+high = function(x)
+{
+    win = (18 < x) & (x != 0)
+    ifelse(win, 1, -1)
+}
+
+
+column1 = function(x)
+{
+    ifelse(x %% 3 == 1, 2, -1)
+}
+
+
+straightup = function(x, d = 1)
+{
+    ifelse(x == d, 35, -1)
+}
+
+
+# Construct a simple betting strategy
+simple_strategy = function(bet = even)
+{
+    function(x) cumsum(bet(x))
+}
+
+
+#' Simulate plays from a betting strategy
+#'
+#' @param strategy
+#' @param nplayers number of players to use this strategy
+#' @param ntimes number of times each player should play
+play = function(strategy = simple_strategy()
+    , nplayers = 100L
+    , ntimes = 1000L
+    , ballvalues = 0:36
+){
+    out = replicate(nplayers
+            , strategy(sample(ballvalues, size = ntimes, replace = TRUE))
+            , simplify = FALSE
+    )
+    data.frame(winnings = do.call(c, out)
+            , player = rep(seq(nplayers), each = ntimes)
+            , time = rep(seq(ntimes), times = nplayers)
+    )
+}
+
+```
+
+
+# Questions
+
+## 1 - Simple strategies
+
+> Create at least one visualization for at least one of the betting strategies above.
+> For example, we can simulate how much a single player wins at each time if she sits down and plays 20 games, always betting one unit of money on even, as follows.
+
+```{r, echo = FALSE}
+library(ggplot2)
+theme_set(theme_bw())  # Feel free to set different themes
+
+set.seed(893) # Starts the random number generator at a particular place, so the graph will look the same for everyone.
+d20 = play(nplayers = 1, ntimes = 20)
+
+g = ggplot(data = d20, mapping = aes(x = time, y = winnings)) +
+    geom_line() +
+    labs(title = "Single game of roulette", caption = "Simulated winnings over time for a single roulette player betting one dollar on evens every time.")
+print(g)
+```
+
+> One fun visualization is to draw many partially overlapping opaque lines, with each line representing a sequence of winnings by a single player.
+> You can also add:
+> 
+> - A line for the expected value of winnings at each point in time
+> - A line for the actual simulated average won by each player at each point in time
+> - Labeled vertical and horizontal lines representing typical player behavior, or casino betting limits.
+> 
+> Comment on your visualization(s).
+> What does it show?
+> What questions does it answer?
+
+```{r}
+set.seed(893)
+
+ntimes = 500
+expected = data.frame(time = seq(ntimes))
+expected$winnings = (-0.027 * expected$time)
+
+highdata = play(strategy = simple_strategy(high), nplayers = 1, ntimes = 500)
+g = ggplot(data = highdata, mapping = aes(x = time, y = winnings)) +
+    geom_line() +
+    labs(title = "Single game of roulette", caption = "Simulated winnings over time for a single roulette player betting one dollar on number 19–36 every time.") + geom_line(data = expected, color = "green")
+print(g)
+```
+
+> This is a simulated winnings data of a single player always betting one unit of money on number 19-36 every time, and playing 500 games along with a line for the expected value of winnings at each point in time.The graph shows that the player's winnings are above the expected value of winnings at each point in time before the 140th approximately. As times pass, there are more losings than winnings.By the 500th time, winnings are at -31 that are 17 less winning approximately below the expected value of winnings at that point in time. Over all, the house wins if the player bet on high number every time for 500 times.
+
+
+## 1 - Martingale strategy
+
+> The simplest [martingale strategy](https://en.wikipedia.org/wiki/Martingale_(betting_system)) for betting on a game with nearly equal chances of win and loss is to start with the minimum bet, and then double your previous bet every time you lose.
+> If you win, then you again start fresh by betting the minimum amount.
+> It's possible to use this strategy in roulette, but what will happen?
+
+```{r}
+doublebet = function(x, initialbet = 1, strategy = even)
+{
+    winnings = rep(NA, length(x))
+    betsize = initialbet
+    current_winnings = 0
+    for(i in seq_along(x)){
+        if(strategy(x[i]) == 1){
+            current_winnings = current_winnings + betsize
+            betsize = initialbet
+        } else {
+            current_winnings = current_winnings - betsize
+            betsize = 2 * betsize
+        }
+        winnings[i] = current_winnings
+    }
+    winnings
+}
+```
+
+> `doublebet` implements the basic martingale doubling strategy (very inefficiently 😬, but that's fine for now).
+> Describe in detail what this function does, and how you believe it works.
+> What are the arguments?
+> What kind of objects makes sense to pass in as arguments?
+
+> `doublebet` implements the basic martingale doubling strategy with arguments: `x`, `initialbet`, and `strategy`. The argument `initialbet` has a default set to 1. The argument `strategy` has a default set to even. In this function, `x` is passed as a vector, `initialbet` can be an integer or double, and `strategy` can be passed as a string: one of the betting functions above. The function replicates `winnings` with the same length as `x`, sets `betsize` to `initialbet`, sets the initial `current_winnings` to 0, loops from index i=1 to the length size of `x`, and returns `winnings`. In the loop, if `strategy`'s `x` at that index equals to 1, then adds `betsize` to `current_winnings` and sets `betsize` to 'initialbet'. If `strategy`'s `x` at that index is not 1, then subtracts `betsize` from `current_winnings` and doubles `betsize`.
+
+
+## 3 - Analyzing the martingale strategy
+
+> We can simulate from the martingale strategy as follows.
+
+```{r, echo = FALSE}
+dm = play(doublebet, nplayers = 1, ntimes = 30)
+
+g = ggplot(data = dm, mapping = aes(x = time, y = winnings)) +
+    geom_line() +
+    labs(title = "The Martingale Strategy in Roulette", caption = "Simulated winnings over time for a single roulette player following the basic martingale betting strategy.")
+print(g)
+```
+
+> Simulate and investigate different scenarios to create at least one visualization of the martingale strategy.
+> Comment on your visualization(s) and address the following.
+>
+> 1. Under what assumptions does the martingale strategy work in theory?
+> 2. Could the martingale strategy work in practice, given table limits?
+> 3. Is it good or bad for casinos if players use the martingale strategy?
+>       Does it depend on whether the casino is large or small?
+
+```{r}
+set.seed(893)
+d1 = play(doublebet, nplayers = 1, ntimes = 150)
+d2 = play(doublebet, nplayers = 100, ntimes = 150)
+
+g1 = ggplot(data = d1, mapping = aes(x = time, y = winnings)) +
+    geom_line() +
+    labs(title = "The Martingale Strategy in Roulette", caption = "Simulated winnings over time for a single roulette player following the basic martingale betting strategy.")
+g2 = ggplot(data = d2, mapping = aes(x = time, y = winnings)) +
+    geom_line() +
+    labs(title = "The Martingale Strategy in Roulette", caption = "Simulated winnings over time for a hundred roulette players following the basic martingale betting strategy.")
+print(g1)
+print(g2)
+```
+
+In theory, the martigale works assuming players have unlimited amount of money to bet each time. In practice, that does not work quite well. Doubling the bet every time you lose is an exponential function. Starting the bet at \$1, that is already \$32,768 after losing 14 times. There are more losses on players, it is good for casinos. That is of course not good for small casinos with all big payoffs to keep players betting, but casinos do not go broke in general. So that will not be a problem. Betting limit is in place. At point, players will not be able to bet the doubled amount. Comparing the graphs of single players and 100 players betting on even numbers 150 times above, there are way more losses as a whole on the 100 players graph.
+
+<br><br><br><br>
+
+>>>>>>> 8e4aa4642ce2c932affdd727beb557c7a724e10b

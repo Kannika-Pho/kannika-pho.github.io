@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "IntroRmarkdown"
 Author: "Kannika Pho"
@@ -47,3 +48,54 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+=======
+---
+title: "IntroRmarkdown"
+Author: "Kannika Pho"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Outcomes
++ Create HTML report using Rstudio
++ Embed plots in HTML
++ Manipulate named vectors
+
+1. Average Annual Precipitation by cities in US is measured in [inches/milimeters with ranks](https://www.currentresults.com/Weather/US/average-annual-precipitation-by-city.php)
+
+2. Verify Sacramento is in the data.
+```{r}
+x = (precip)
+y = (names(x))
+"Sacramento" %in% y
+```
+  Yes, Sacramento is in the data using %in%
+
+3. Which 5 cities receive the most rain? The least rain?
+```{r}
+z = sort(x)
+z
+tail(z)
+head(z)
+```
+  5 cities receive the most rain are Mobile, Miami, San Juan, New Orleans, Juneau, and Jacksonville. 5 cities receive the least rain are Phoenix, Reno, Albuquerque, El Paso, Boise, and Denver.
+```{r}
+r = z[70]/z[1]
+d = x - mean(x)
+d = abs(d)
+sort(d)
+hist(x)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+>>>>>>> 8e4aa4642ce2c932affdd727beb557c7a724e10b

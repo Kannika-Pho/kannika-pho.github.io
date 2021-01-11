@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 ---
 title: "SQL Example"
 author: "Kannika Pho"
 ---
 
 ### Creating Table ( MySQL on Unix)
+=======
+---
+title: "SQL Example"
+author: "Kannika Pho"
+---
+
+### Creating Table ( MySQL on Unix)
+>>>>>>> 8e4aa4642ce2c932affdd727beb557c7a724e10b

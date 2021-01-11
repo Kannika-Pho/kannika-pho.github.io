@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Groceries Data"
 Author: "Kannika Pho"
@@ -146,3 +147,153 @@ inspect(tail(sort(basketRules, by = "lift")))
 According to this `basketRule`, the highest lift value is 2.18 which means that customers are most likely to buy sausage than any other product, while already having whole milk and yogurt in basket. The lowest lift value is 0.519 which means that customers are least likely to buy other vegetables than any other product, while already having long life bakery product in basket.
 
 <br><br><br><br>
+=======
+---
+title: "Groceries Data"
+Author: "Kannika Pho"
+---
+
+#### Introduction
+
+The [data set](https://www.kaggle.com/heeraldedhia/groceries-dataset?select=Groceries_dataset.csv) has 3 columns and 38765 rows of purchase orders from grocery stores. I choose this data since Market Basket Analysis is one of the techniques to see associations between items by looking for combinations of items being purchased together frequently. In this project, I want to learn about Association Rules to analyze transaction data.
+
+Association rules are statements that help to find relationships between data.
+
+An association rule has two parts, an antecedent and a consequent. An antecedent is an item found in the data. A consequent is an item that is found in combination with the antecedent. Association rules are created by analyzing data for frequent relationships and using support and confidence to identify the most important relationships. Support is an indication of how frequently the items being purchased. Confidence states the number of times the antecedent/consequent statements found. More detail on [arule](https://cran.r-project.org/web/packages/arules/vignettes/arules.pdf).
+
+#### Outcomes
+
+- Identifying items which are purchased more frequently
+- Identifying relationships between items purchased: support, lift, confidence 
+- Data visualizations
+
+#### Loading Data
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+library("plyr")
+library("Matrix")
+library("arules", warn.conflicts = FALSE)
+library("grid")
+library("arulesViz")
+library("colorspace")
+
+groceries = read.csv("C:/Users/kanni/Downloads/Groceries_dataset.csv")
+class(groceries)
+dim(groceries)
+```
+
+```{r}
+str(groceries)
+head(groceries)
+```
+
+```{r}
+# check for NA
+sum(is.na(groceries))
+
+# converting `Member_number`
+sorting = groceries[order(groceries$Member_number),]
+sorting$Member_number = as.numeric(sorting$Member_number)
+str(sorting)
+```
+
+```{r}
+# grouping same `Member_number` and `Date`
+itemsList = ddply(sorting, c("Member_number", "Date"), function(df1) paste(df1$itemDescription, collapse = ","))
+head(itemsList, 10)
+
+# setting `Member_number` and `Date` to NULL
+itemsList$Member_number <- NULL
+itemsList$Date <- NULL
+colnames(itemsList) <- c("itemsList")
+
+# writing out itemsList
+write.csv(itemsList,"ItemsList.csv", quote = FALSE, row.names = TRUE)
+head(itemsList)
+```
+```{r}
+# converting itemsList to basket type
+basket = read.transactions(file="ItemsList.csv", rm.duplicates= TRUE, format="basket",sep=",",cols=1);
+print(basket)
+
+# removing quotes
+basket@itemInfo$labels = gsub("\"","",basket@itemInfo$labels)
+
+# displaying frequent items purchased
+itemFrequencyPlot(basket,topN=20,type="absolute",main="Item Frequency")
+```
+
+#### Rules
+Support = Probability (A and B) 
+Support = (# of transactions involving A and B) / (total # of transactions).
+
+Confidence = Probability (A and B) = P(A) 
+Confidence = (# of transactions involving A and B) / (total # of transactions that have A).
+
+```{r}
+# using apriori algorithm to create rules
+basketRules <- apriori(basket, parameter = list(minlen=2, sup = 0.001, conf = 0.06, target="rules"))
+
+# print basketRules generated
+print(length(basketRules))
+summary(basketRules)
+
+inspect(basketRules[1:15])
+
+# Rules visualization
+plot(basketRules, jitter = 0)
+
+# plotting first 40 rules
+plot(basketRules[1:40], method="graph")
+```
+
+`summary(basketRules)` shows there is total of 361 rules with mean support is equal to 0.28% and mean confidense is equal to 9.56% which states rule happens in 0.28% transactions and implication is 9.56%.
+
+#### Correlation/ Lift
+If lift = 1, then A and B are independent . If lift > 1, then A and B are positively correlated . If lift < 1, then A and B are negatively correlated.
+
+Firstly let us try the eclat algorithm - to see most frequent itemsets. Below we will see the list of the most common items together with their individual support.
+
+```{r}
+# use eclat to show most frequent items with support 
+frequentSets <- eclat(basket, parameter=list(supp=0.07, maxlen=10))
+inspect(frequentSets)
+```
+
+```{r}
+sodaRules = subset(basketRules, items %in% "soda")
+inspect(head(sodaRules))
+plot(sodaRules,method="graph",interactive=FALSE,shading="lift")
+
+sausageRules = subset(basketRules, items %in% "sausage")
+inspect(head(sort(sausageRules, by ="lift")))
+plot(sausageRules,method="graph",interactive=FALSE,shading="lift")
+```
+
+`sausageRules` can be interpreted as such:
+
+- customers who buys whole milk and yogurt are more than two times, more likely to buy sausage than other customers.
+- customers who buys beverages are more than once, more likely to buy sausage than other customers.
+
+#### More Visualizations
+Each of the matrix cells can have different red shade depending on the lift value. Numbers on the axes are corresponding to the items listed before the matrix. For instance, the most red cell corresponds to the rule {whole milk,yogurt}	=>	{sausage}, so sausage is most likely to be bought with whole milk and yogurt.
+
+```{r}
+plot(sausageRules, method="matrix", measure=c("support","confidence"))
+plot(sausageRules, method="grouped", measure="support", control=list(col=sequential_hcl(100)))
+```
+
+Grouped matrix plot has the same data on the axes. Yet, the size reflects the support of the rule and the color reflects the lift of the rule.
+
+```{r}
+inspect(head(sort(basketRules, by = "lift")))
+inspect(tail(sort(basketRules, by = "lift")))
+```
+According to this `basketRule`, the highest lift value is 2.18 which means that customers are most likely to buy sausage than any other product, while already having whole milk and yogurt in basket. The lowest lift value is 0.519 which means that customers are least likely to buy other vegetables than any other product, while already having long life bakery product in basket.
+
+<br><br><br><br>
+>>>>>>> 8e4aa4642ce2c932affdd727beb557c7a724e10b
