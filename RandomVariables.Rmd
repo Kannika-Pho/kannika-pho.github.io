@@ -1,5 +1,6 @@
 ---
-title: Random Variables
+title: "Random Variables"
+Author: "Kannika Pho"
 ---
 
 #### Outcomes

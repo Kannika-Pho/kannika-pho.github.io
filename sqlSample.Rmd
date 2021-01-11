@@ -1,0 +1,6 @@
+---
+title: "SQL Example"
+author: "Kannika Pho"
+---
+
+### Creating Table ( MySQL on Unix)

@@ -1,6 +1,6 @@
 ---
 title: "IntroRmarkdown"
-output: html_document
+Author: "Kannika Pho"
 ---
 
 ```{r setup, include=FALSE}

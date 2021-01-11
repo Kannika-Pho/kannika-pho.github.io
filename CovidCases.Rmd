@@ -1,5 +1,6 @@
 ---
-title: Covid Cases
+title: "Covid Cases"
+Author: "Kannika Pho"
 ---
 
 #### Outcomes

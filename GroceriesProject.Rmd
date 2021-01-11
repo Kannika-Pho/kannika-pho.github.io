@@ -1,5 +1,6 @@
 ---
 title: "Groceries Data"
+Author: "Kannika Pho"
 ---
 
 #### Introduction

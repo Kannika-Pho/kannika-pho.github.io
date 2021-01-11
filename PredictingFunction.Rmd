@@ -1,5 +1,6 @@
 ---
-title: Predicting a known function
+title: "Predicting a known function"
+Author: "Kannika Pho"
 ---
 
 #### Outcomes

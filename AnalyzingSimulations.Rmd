@@ -1,5 +1,6 @@
 ---
-title: Analyzing Simulations
+title: "Analyzing Simulations"
+Author: "Kannika Pho"
 ---
 
 #### Outcomes

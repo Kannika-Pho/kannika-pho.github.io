@@ -1,7 +1,6 @@
 ---
 title: Predicting the interest rate
 Author: "Kannika Pho"
-date: 8 November 2020
 ---
 
 Our goal in this assignment is to predict the interest rate of government debt as accurately as possible.
